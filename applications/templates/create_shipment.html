@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Create Shipment</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>TrackSure</h1>
+    <nav>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/create-shipment">Create Shipment</a>
+        <a href="/track">Track Parcel</a>
+    </nav>
+</header>
+
+<div class="container">
+
+    <h2>Create New Shipment</h2>
+
+    <form id="shipment-form">
+
+        <label>Sender Name</label>
+        <input id="sender_name" required>
+
+        <label>Receiver Name</label>
+        <input id="receiver_name" required>
+
+        <label>Receiver Address</label>
+        <input id="receiver_address" required>
+
+        <label>Parcel Description</label>
+        <input id="parcel_description" required>
+
+        <button type="submit" id="create-btn">
+            Create Shipment
+        </button>
+
+    </form>
+
+    <p id="result"></p>
+
+</div>
+
+<script>
+
+document.getElementById("shipment-form")
+.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const shipmentData = {
+
+        sender_name:
+            document.getElementById("sender_name").value,
+
+        receiver_name:
+            document.getElementById("receiver_name").value,
+
+        receiver_address:
+            document.getElementById("receiver_address").value,
+
+        parcel_description:
+            document.getElementById("parcel_description").value
+
+    };
+
+    try {
+
+        const response = await fetch("/api/shipments", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(shipmentData)
+
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+
+            document.getElementById("result").innerHTML =
+                "Shipment Created! Tracking ID: " +
+                result.tracking_id;
+
+        } else {
+
+            document.getElementById("result").innerHTML =
+                "Error: " + result.detail;
+
+        }
+
+    } catch (error) {
+
+        document.getElementById("result").innerHTML =
+            "Unable to connect to server.";
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

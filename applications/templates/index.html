@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TrackSure Dashboard</title>
+    <link rel="stylesheet"
+          href="/static/style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>TrackSure</h1>
+    <nav>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/create-shipment">Create Shipment</a>
+        <a href="/track">Track Parcel</a>
+    </nav>
+</header>
+
+<div class="container">
+
+    <h2>Shipment Dashboard</h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <h3>Total Shipments</h3>
+            <p id="total-count">{{ shipments|length }}</p>
+        </div>
+
+        <div class="card">
+            <h3>In Transit</h3>
+            <p id="transit-count">
+                {{ shipments|selectattr("status", "equalto", "IN_TRANSIT")|list|length }}
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Delivered</h3>
+            <p id="delivered-count">
+                {{ shipments|selectattr("status", "equalto", "DELIVERED")|list|length }}
+            </p>
+        </div>
+
+    </div>
+
+    <h2>All Shipments</h2>
+
+    <table id="shipment-table">
+
+        <thead>
+            <tr>
+                <th>Tracking ID</th>
+                <th>Sender</th>
+                <th>Receiver</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {% for shipment in shipments %}
+
+            <tr>
+                <td>{{ shipment.tracking_id }}</td>
+                <td>{{ shipment.sender_name }}</td>
+                <td>{{ shipment.receiver_name }}</td>
+                <td>{{ shipment.status }}</td>
+
+                <td>
+                    <a href="/track?tracking_id={{ shipment.tracking_id }}">
+                        Track
+                    </a>
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+</html>
