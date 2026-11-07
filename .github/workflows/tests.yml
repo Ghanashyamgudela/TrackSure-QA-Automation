@@ -1,0 +1,67 @@
+
+name: TrackSure QA Automation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  api-and-database-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Start TrackSure application
+        run: |
+          mkdir -p reports
+          nohup uvicorn application.main:app \
+            --host 127.0.0.1 \
+            --port 8000 > server.log 2>&1 &
+          echo $! > server.pid
+
+      - name: Wait for application
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:8000/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat server.log
+          exit 1
+
+      - name: Run API and database tests
+        run: |
+          pytest tests/api/ tests/database/ \
+            --html=reports/TrackSure_CI_Report.html \
+            --self-contained-html
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TrackSure-Test-Report
+          path: reports/TrackSure_CI_Report.html
+          if-no-files-found: ignore
+
+      - name: Show application logs if tests fail
+        if: failure()
+        run: cat server.log
