@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Settings | TrackSure{% endblock %}
+{% block breadcrumb %}Settings{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+    <div><p class="eyebrow">PREFERENCES & ACCESS</p><h1>Settings</h1><p class="page-subtitle">Manage your TrackSure workspace and staff access.</p></div>
+</section>
+
+<section id="settings-guest" class="surface settings-guest">
+    <span class="metric-icon icon-blue" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 3.5 6v5c0 5 3.6 8.5 8.5 10 4.9-1.5 8.5-5 8.5-10V6L12 3Z"/><path d="M12 8v4m0 4h.01"/></svg></span>
+    <div><h2>Staff sign-in required</h2><p>Sign in to view your account details and manage team access.</p><a class="button button-primary" href="/login">Sign in to TrackSure</a></div>
+</section>
+
+<div id="settings-session" hidden>
+    <section class="surface settings-account">
+        <div><p class="eyebrow">YOUR ACCOUNT</p><h2>Signed in as <span id="settings-username"></span></h2><p class="section-description">Your role controls which shipment and team actions are available.</p></div>
+        <span class="role-badge" id="settings-role"></span>
+    </section>
+
+    <section class="surface settings-access">
+        <div class="section-heading"><div><p class="eyebrow">TEAM ACCESS</p><h2>Staff accounts</h2><p class="section-description">Administrators can add team members and manage account access.</p></div></div>
+        <div id="settings-admin-notice" class="settings-notice">
+            <p>Staff account management is available to administrators. Contact your workspace administrator if you need access.</p>
+        </div>
+        <section id="admin-panel" hidden>
+            <form id="staff-form" class="staff-form">
+                <label>Username<input name="username" minlength="3" required autocomplete="off" placeholder="e.g. jordan.operator"></label>
+                <label>Password<input name="password" type="password" minlength="12" required autocomplete="new-password" placeholder="At least 12 characters"></label>
+                <label>Role<select name="role"><option value="operator">Operator</option><option value="admin">Administrator</option></select></label>
+                <button class="button button-primary" type="submit">Add staff member</button>
+            </form>
+            <p id="staff-result" class="form-message" role="status"></p>
+            <div class="staff-list-heading"><span>TEAM MEMBERS</span><span>ACCOUNT ACCESS</span></div>
+            <div id="staff-list" class="staff-list"></div>
+        </section>
+    </section>
+
+    <section class="surface settings-security">
+        <span class="metric-icon icon-teal" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3m-4 5v2"/></svg></span>
+        <div><p class="eyebrow">SESSION SECURITY</p><h2>Protected staff actions</h2><p>Staff sessions use signed, HTTP-only cookies and expire after 12 hours. Shipment status changes and account management require an active session and CSRF protection.</p></div>
+    </section>
+</div>
+{% endblock %}

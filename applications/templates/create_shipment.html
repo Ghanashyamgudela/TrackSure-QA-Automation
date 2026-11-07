@@ -1,112 +1,55 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Create Shipment</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+{% block title %}Create shipment | TrackSure{% endblock %}
+{% block breadcrumb %}Create shipment{% endblock %}
 
-<body>
+{% block content %}
+<section class="page-heading">
+    <div><p class="eyebrow">BOOK A PARCEL</p><h1>Create Shipment</h1><p class="page-subtitle">Add sender and delivery details to create a trackable shipment.</p></div>
+</section>
 
-<header>
-    <h1>TrackSure</h1>
-    <nav>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/create-shipment">Create Shipment</a>
-        <a href="/track">Track Parcel</a>
-    </nav>
-</header>
+<div class="booking-layout">
+    <section class="surface booking-panel">
+        <div class="form-section-heading">
+            <span class="step-number">01</span>
+            <div><h2>Shipment details</h2><p>All fields are required to book a shipment.</p></div>
+        </div>
+        <form id="shipment-form" class="booking-form">
+            <div class="form-grid">
+                <label for="sender_name">Sender name
+                    <input id="sender_name" name="sender_name" type="text" autocomplete="name" maxlength="120" placeholder="Enter sender's full name" required>
+                </label>
+                <label for="receiver_name">Receiver name
+                    <input id="receiver_name" name="receiver_name" type="text" maxlength="120" placeholder="Enter recipient's full name" required>
+                </label>
+                <label for="receiver_address" class="form-span">Delivery destination
+                    <input id="receiver_address" name="receiver_address" type="text" maxlength="500" autocomplete="shipping street-address" placeholder="Street, city, region, postal code" required>
+                </label>
+                <label for="parcel_description" class="form-span">Parcel description
+                    <textarea id="parcel_description" name="parcel_description" rows="3" maxlength="1000" placeholder="Briefly describe the parcel contents" required></textarea>
+                </label>
+            </div>
+            <div class="form-footer">
+                <p class="form-hint"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3.5 6v5c0 5 3.6 8.5 8.5 10 4.9-1.5 8.5-5 8.5-10V6L12 3Z"/><path d="m8.5 12 2.2 2.2 4.8-4.8"/></svg> Your shipment receives a unique tracking ID.</p>
+                <button type="submit" id="create-btn" class="button button-primary">
+                    <span>Create shipment</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+                </button>
+            </div>
+            <div id="result" class="notification" role="status" aria-live="polite"></div>
+        </form>
+    </section>
 
-<div class="container">
-
-    <h2>Create New Shipment</h2>
-
-    <form id="shipment-form">
-
-        <label>Sender Name</label>
-        <input id="sender_name" required>
-
-        <label>Receiver Name</label>
-        <input id="receiver_name" required>
-
-        <label>Receiver Address</label>
-        <input id="receiver_address" required>
-
-        <label>Parcel Description</label>
-        <input id="parcel_description" required>
-
-        <button type="submit" id="create-btn">
-            Create Shipment
-        </button>
-
-    </form>
-
-    <p id="result"></p>
-
+    <aside class="booking-aside">
+        <article class="surface booking-note">
+            <span class="aside-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8.5 4.5v9L12 21l-8.5-4.5v-9L12 3Z"/><path d="m3.8 7.7 8.2 4.5 8.2-4.5M12 12.2V21"/></svg></span>
+            <h2>What happens next?</h2>
+            <ol class="booking-steps"><li><span>1</span><p><strong>Shipment booked</strong><small>We'll create a unique tracking ID.</small></p></li><li><span>2</span><p><strong>Follow its journey</strong><small>Track every status update online.</small></p></li><li><span>3</span><p><strong>Delivery confirmed</strong><small>See proof when it reaches its destination.</small></p></li></ol>
+        </article>
+        <article class="booking-support"><span class="support-dot"></span><p><strong>Need help?</strong><br>Review shipment progress anytime from Track Parcel.</p></article>
+    </aside>
 </div>
+{% endblock %}
 
-<script>
-
-document.getElementById("shipment-form")
-.addEventListener("submit", async function(event) {
-
-    event.preventDefault();
-
-    const shipmentData = {
-
-        sender_name:
-            document.getElementById("sender_name").value,
-
-        receiver_name:
-            document.getElementById("receiver_name").value,
-
-        receiver_address:
-            document.getElementById("receiver_address").value,
-
-        parcel_description:
-            document.getElementById("parcel_description").value
-
-    };
-
-    try {
-
-        const response = await fetch("/api/shipments", {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify(shipmentData)
-
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-
-            document.getElementById("result").innerHTML =
-                "Shipment Created! Tracking ID: " +
-                result.tracking_id;
-
-        } else {
-
-            document.getElementById("result").innerHTML =
-                "Error: " + result.detail;
-
-        }
-
-    } catch (error) {
-
-        document.getElementById("result").innerHTML =
-            "Unable to connect to server.";
-
-    }
-
-});
-
-</script>
-
-</body>
-</html>
+{% block scripts %}
+<script src="/static/create-shipment.js" defer></script>
+{% endblock %}

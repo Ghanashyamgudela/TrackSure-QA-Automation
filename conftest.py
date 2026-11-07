@@ -1,3 +1,5 @@
+import os
+
 import pytest
 from utilities.driver_factory import get_driver
 
@@ -14,7 +16,7 @@ def driver():
 
 @pytest.fixture
 def base_url():
-    return "http://127.0.0.1:8000"
+    return os.environ.get("TRACKSURE_TEST_BASE_URL", "http://127.0.0.1:8000")
 
 import pytest
 from api.shipment_api import ShipmentAPI
@@ -22,7 +24,10 @@ from api.shipment_api import ShipmentAPI
 
 @pytest.fixture
 def api_client(base_url):
-    return ShipmentAPI(base_url)
+    client = ShipmentAPI(base_url)
+    response = client.login()
+    assert response.status_code == 200, response.text
+    return client
 
 
 @pytest.fixture

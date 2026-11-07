@@ -1,89 +1,60 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Track Parcel</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
+{% block title %}Track a parcel | TrackSure{% endblock %}
+{% block breadcrumb %}Track parcel{% endblock %}
 
-<body>
+{% block content %}
+<section class="page-heading tracking-heading">
+    <div><p class="eyebrow">TRACK A SHIPMENT</p><h1>Know where it’s going.</h1><p class="page-subtitle">Enter a tracking ID to see the latest shipment status and full delivery journey.</p></div>
+</section>
 
-<header>
-    <h1>TrackSure</h1>
-    <nav>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/create-shipment">Create Shipment</a>
-        <a href="/track">Track Parcel</a>
-    </nav>
-</header>
+<section class="surface tracking-search-card">
+    <form id="tracking-form" class="tracking-form">
+        <label for="tracking_id">Tracking ID</label>
+        <div class="tracking-input-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+            <input id="tracking_id" name="tracking_id" value="{{ tracking_id }}" placeholder="e.g. TRK-123ABC" autocomplete="off" required>
+            <button type="submit" id="track-btn" class="button button-primary">Track parcel <span aria-hidden="true">→</span></button>
+        </div>
+        <p class="form-hint">Your tracking ID is available in your shipment booking confirmation.</p>
+    </form>
+</section>
 
-<div class="container">
+<p id="tracking-error" class="notification notification-error" role="alert" hidden></p>
+<div id="tracking-loading" class="surface loading-panel" role="status" hidden><span class="spinner"></span> Finding your shipment…</div>
 
-    <h2>Track Your Parcel</h2>
+<section id="tracking-result" class="tracking-result" hidden aria-live="polite">
+    <article class="surface tracking-overview">
+        <div class="tracking-overview-heading">
+            <div><span class="detail-label">TRACKING NUMBER</span><h2 id="result-id" class="tracking-number"></h2></div>
+            <span id="result-status" class="status-badge"></span>
+        </div>
+        <div class="tracking-details-grid">
+            <div><span class="detail-label">SENDER</span><strong id="result-sender">—</strong></div>
+            <div><span class="detail-label">RECEIVER</span><strong id="result-receiver">—</strong></div>
+            <div><span class="detail-label">DESTINATION</span><strong id="result-destination">—</strong></div>
+            <div><span class="detail-label">PARCEL</span><strong id="result-parcel">—</strong></div>
+            <div id="eta-detail"><span class="detail-label">ESTIMATED DELIVERY</span><strong id="result-eta">—</strong></div>
+        </div>
+    </article>
 
-    <input
-        id="tracking_id"
-        placeholder="Enter Tracking ID"
-    >
+    <article class="surface timeline-panel">
+        <div class="section-heading"><div><p class="eyebrow">SHIPMENT PROGRESS</p><h2>Delivery timeline</h2></div></div>
+        <ol id="timeline" class="timeline" aria-label="Shipment status timeline"></ol>
+    </article>
 
-    <button id="track-btn" onclick="trackParcel()">
-        Track Now
-    </button>
+    <article class="surface history-panel">
+        <div class="section-heading"><div><p class="eyebrow">SHIPMENT UPDATES</p><h2>Tracking history</h2></div></div>
+        <ol id="tracking-history" class="history-list"></ol>
+    </article>
 
-    <div id="tracking-result"></div>
+    <article id="delivery-proof" class="surface proof-panel" hidden>
+        <span class="metric-icon icon-green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 9.5 17 19 7.5"/></svg></span>
+        <div><p class="eyebrow">DELIVERY CONFIRMED</p><h2>Proof of delivery</h2><p><strong>Received by:</strong> <span id="proof-name"></span></p><p><strong>Confirmed:</strong> <time id="proof-time"></time></p><p id="proof-remarks"></p></div>
+    </article>
+</section>
+{% endblock %}
 
-</div>
-
-<script>
-
-async function trackParcel() {
-
-    const trackingId =
-        document.getElementById("tracking_id").value.trim();
-
-    const result =
-        document.getElementById("tracking-result");
-
-    if (!trackingId) {
-        result.textContent = "Please enter a tracking ID.";
-        return;
-    }
-
-    try {
-
-        const response = await fetch(
-            `/api/track/${encodeURIComponent(trackingId)}`
-        );
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            result.textContent = data.detail;
-            return;
-        }
-
-        result.innerHTML = `
-            <h3>Shipment Details</h3>
-            <p>Tracking ID: ${data.tracking_id}</p>
-            <p>Receiver: ${data.receiver_name}</p>
-            <p>Status: ${data.status}</p>
-
-            <h3>Tracking History</h3>
-
-            ${data.history.map(item =>
-                `<p>${item.status} - ${item.updated_at}</p>`
-            ).join("")}
-        `;
-
-    } catch (error) {
-
-        result.textContent = "Unable to connect to server.";
-
-    }
-
-}
-
-</script>
-
-</body>
-</html>
+{% block scripts %}
+<script src="/static/tracking.js" defer></script>
+{% endblock %}

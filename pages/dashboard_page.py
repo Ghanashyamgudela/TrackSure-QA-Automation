@@ -18,7 +18,7 @@ class DashboardPage:
 
         return self.wait.until(
             EC.visibility_of_element_located(
-                (By.TAG_NAME, "h2")
+                (By.TAG_NAME, "h1")
             )
         ).text
 

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101b35">
+    <title>{% block title %}TrackSure{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="app-shell">
+    <button class="sidebar-scrim" id="sidebar-scrim" aria-label="Close navigation" tabindex="-1"></button>
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+        <a class="brand" href="/dashboard" aria-label="TrackSure home">
+            <span class="brand-mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none"><path d="M5 9.5h13.5a6.5 6.5 0 0 1 0 13H14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="m10 5 5 4.5-5 4.5M27 22.5H13.5a6.5 6.5 0 0 1 0-13H18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="23" cy="22.5" r="2" fill="#14B8A6"/></svg>
+            </span>
+            <span>Track<span class="brand-light">Sure</span><small>LOGISTICS PLATFORM</small></span>
+        </a>
+
+        <p class="nav-caption">WORKSPACE</p>
+        <nav class="side-nav">
+            <a href="/dashboard" class="nav-link{% if active_nav == 'dashboard' %} active{% endif %}"{% if active_nav == 'dashboard' %} aria-current="page"{% endif %}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="4" rx="1.5"/><rect x="13.5" y="10.5" width="7" height="10" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/></svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="/shipments" class="nav-link{% if active_nav == 'shipments' %} active{% endif %}"{% if active_nav == 'shipments' %} aria-current="page"{% endif %}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8.5 4.5v9L12 21l-8.5-4.5v-9L12 3Z"/><path d="m3.8 7.7 8.2 4.5 8.2-4.5M12 12.2V21"/></svg>
+                <span>All Shipments</span>
+            </a>
+            <a href="/create-shipment" class="nav-link{% if active_nav == 'create' %} active{% endif %}"{% if active_nav == 'create' %} aria-current="page"{% endif %}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/><circle cx="12" cy="12" r="9"/></svg>
+                <span>Create Shipment</span>
+            </a>
+            <a href="/track" class="nav-link{% if active_nav == 'track' %} active{% endif %}"{% if active_nav == 'track' %} aria-current="page"{% endif %}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5"/><path d="m18 6 3-3"/></svg>
+                <span>Track Parcel</span>
+            </a>
+            <a href="/reports" class="nav-link{% if active_nav == 'reports' %} active{% endif %}"{% if active_nav == 'reports' %} aria-current="page"{% endif %}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5h16M6.5 16V10m5 6V5m5 11v-4"/></svg>
+                <span>Reports</span>
+            </a>
+        </nav>
+
+        <p class="nav-caption nav-caption-settings">PREFERENCES</p>
+        <nav class="side-nav">
+            <a href="/settings" class="nav-link{% if active_nav == 'settings' %} active{% endif %}"{% if active_nav == 'settings' %} aria-current="page"{% endif %}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="m19.4 15 .1.1a1.8 1.8 0 1 1-2.5 2.5l-.1-.1a1.8 1.8 0 0 0-3 .9v.2a1.8 1.8 0 1 1-3.6 0v-.2a1.8 1.8 0 0 0-3-.9l-.1.1a1.8 1.8 0 1 1-2.5-2.5l.1-.1a1.8 1.8 0 0 0-.9-3H3.7a1.8 1.8 0 1 1 0-3.6h.2a1.8 1.8 0 0 0 .9-3l-.1-.1a1.8 1.8 0 1 1 2.5-2.5l.1.1a1.8 1.8 0 0 0 3-.9v-.2a1.8 1.8 0 1 1 3.6 0v.2a1.8 1.8 0 0 0 3 .9l.1-.1a1.8 1.8 0 1 1 2.5 2.5l-.1.1a1.8 1.8 0 0 0 .9 3h.2a1.8 1.8 0 1 1 0 3.6h-.2a1.8 1.8 0 0 0-.9 3Z" transform="translate(1 1) scale(.91)"/></svg>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="sidebar-status"><span class="status-dot"></span><span>All systems operational</span></div>
+            <div class="staff-session" id="staff-session" hidden>
+                <span class="avatar" id="staff-avatar">TS</span>
+                <span class="staff-meta"><strong id="staff-name">Staff</strong><small id="staff-role">Operator</small></span>
+                <button type="button" class="icon-button logout-button" id="logout-button" aria-label="Sign out" title="Sign out">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5v16h5M14 8l4 4-4 4m4-4H9"/></svg>
+                </button>
+            </div>
+            <a class="sidebar-login" id="login-link" href="/login">Staff sign in <span aria-hidden="true">→</span></a>
+        </div>
+    </aside>
+
+    <div class="main-shell">
+        <header class="topbar">
+            <button type="button" class="mobile-menu" id="mobile-menu" aria-label="Open navigation" aria-expanded="false" aria-controls="sidebar">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <div class="topbar-context">
+                <span class="breadcrumb">TrackSure <span>/</span> {% block breadcrumb %}Workspace{% endblock %}</span>
+                <span class="topbar-date" id="current-date"></span>
+            </div>
+            <div class="topbar-actions">
+                <a class="button button-primary button-compact" href="/create-shipment">
+                    <span aria-hidden="true">+</span> New shipment
+                </a>
+            </div>
+        </header>
+        <main class="page-content">
+            {% block content %}{% endblock %}
+            <footer class="page-footer"><span>TrackSure Logistics</span><span>Shipment operations, made clear.</span></footer>
+        </main>
+    </div>
+</div>
+<script src="/static/app.js" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

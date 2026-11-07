@@ -14,6 +14,11 @@ permissions:
 jobs:
   api-and-database-tests:
     runs-on: ubuntu-latest
+    env:
+      TRACKSURE_SECRET_KEY: "ci-only-signing-key-never-use-in-production"
+      TRACKSURE_BOOTSTRAP_ADMIN_USERNAME: "ci-admin"
+      TRACKSURE_BOOTSTRAP_ADMIN_PASSWORD: "ci-only-password-never-use-in-production"
+      TRACKSURE_DATABASE_URL: "sqlite:///./tracksure_ci.db"
 
     steps:
       - name: Checkout repository
